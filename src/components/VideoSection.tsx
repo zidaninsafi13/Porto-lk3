@@ -1,36 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronRight, Target, Lightbulb, BarChart3, Play } from "@/components/ui/icons";
 import { VIDEO_ANALYSIS_DATA, VIDEO_SOURCE_URL, VideoAnalysisPoint } from "@/data/videoAnalysis";
 
-const getGoogleDrivePreviewUrl = (url: string) => {
-  const match = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
-  return match ? `https://drive.google.com/file/d/${match[1]}/preview` : url;
-};
-
 export const VideoSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("ana-01");
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const videoSource = VIDEO_SOURCE_URL.trim();
-  const usesGoogleDrive = videoSource.includes("drive.google.com/file/d/");
 
   const activePoint: VideoAnalysisPoint =
     VIDEO_ANALYSIS_DATA.find((p) => p.id === activeTab) || VIDEO_ANALYSIS_DATA[0];
 
-  const parseSeconds = (timestamp: string): number => {
-    const parts = timestamp.split(":").map(Number);
-    if (parts.length === 2) {
-      return parts[0] * 60 + parts[1];
-    }
-    return 0;
-  };
-
   const handleSelectTab = (item: VideoAnalysisPoint) => {
     setActiveTab(item.id);
-    if (videoRef.current) {
-      const timeInSec = parseSeconds(item.timestamp);
-      videoRef.current.currentTime = timeInSec;
-    }
   };
 
   return (
@@ -194,45 +174,32 @@ export const VideoSection: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Video Player Container with annotations */}
+                  {/* Video Player Container: thumbnail card yang membuka Google Drive di tab baru */}
                   <div className="relative rounded-[6px] overflow-hidden bg-black border border-[rgba(54,187,211,0.3)] aspect-video shadow-inner group">
-                    {videoSource ? (
-                      usesGoogleDrive ? (
-                        <iframe
-                          src={getGoogleDrivePreviewUrl(videoSource)}
-                          title="Rekaman praktik mengajar PJOK di SDN 1 Setonopande"
-                          allow="autoplay; encrypted-media"
-                          allowFullScreen
-                          className="h-full w-full border-0"
-                        />
-                      ) : (
-                        <video
-                          ref={videoRef}
-                          key="ppl-video-player"
-                          src={videoSource}
-                          poster="assets/backgrounds/bg-04-praktik.png"
-                          controls
-                          preload="metadata"
-                          playsInline
-                          aria-label="Rekaman praktik mengajar PJOK di SDN 1 Setonopande"
-                          className="h-full w-full object-cover"
-                        >
-                          Browser Anda tidak mendukung pemutar video HTML5.
-                        </video>
-                      )
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-[#041217]/95 p-6 text-center">
-                        <div className="max-w-sm">
-                          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#00D2FF]/40 bg-[#00D2FF]/10 text-[#00D2FF]">
-                            <Play className="ml-0.5 h-5 w-5" />
-                          </span>
-                          <p className="mt-4 font-sans text-sm font-semibold text-[#EEF4F2]">Rekaman video segera tersedia</p>
-                          <p className="mt-2 text-xs leading-relaxed text-[#83969D]">
-                            Tautan Google Drive akan ditempatkan di sini tanpa mengubah susunan analisis.
-                          </p>
-                        </div>
-                      </div>
-                    )}
+                    <a
+                      href={VIDEO_SOURCE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Tonton video di Google Drive (tab baru)"
+                      aria-label="Tonton video rekaman praktik mengajar PJOK di Google Drive — terbuka di tab baru"
+                      className="absolute inset-0 block"
+                    >
+                      <img
+                        src="assets/backgrounds/bg-04-praktik.png"
+                        alt=""
+                        className="h-full w-full object-cover opacity-55 transition-opacity duration-300 group-hover:opacity-75"
+                      />
+                      <span className="absolute inset-0 bg-gradient-to-t from-[#030C0F]/85 via-[#030C0F]/30 to-transparent" />
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="flex h-16 w-16 items-center justify-center rounded-full border border-[#00D2FF]/50 bg-[#041217]/70 text-[#00D2FF] shadow-[0_0_24px_rgba(0,210,255,0.35)] transition-transform duration-300 group-hover:scale-110">
+                          <Play className="ml-1 h-6 w-6" />
+                        </span>
+                      </span>
+                      <span className="button-sweep relative overflow-hidden absolute bottom-5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-[4px] border border-[#00D2FF]/40 bg-[#041217]/80 px-4 py-2 font-plex text-[10px] font-semibold uppercase tracking-[0.25em] text-[#EEF4F2]">
+                        <Play className="h-3.5 w-3.5 text-[#00D2FF]" />
+                        Tonton Video
+                      </span>
+                    </a>
 
                     {/* Overlaid Handwriting Text (Top Left) */}
                     <div className="absolute top-4 left-5 pointer-events-none select-none z-10 hidden sm:block">

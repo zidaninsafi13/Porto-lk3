@@ -4,3 +4,7 @@ dist/
 *.local
 # keep big video file on disk, do not track in git
 assets/video/*.mp4
+# 0730.mp4 (approx. 1 GB) exceeds the 100 MB GitHub file limit.
+# Keep it out of git until it is compressed below 100 MB.
+# After replacing it with a compressed version, REMOVE this rule so it gets tracked.
+public/assets/video/0730.mp4

@@ -8,8 +8,8 @@ export interface VideoAnalysisPoint {
   action: string;
 }
 
-// Video praktik mengajar lokal dari folder assets/video.
-export const VIDEO_SOURCE_URL = "assets/video/0730.mp4";
+// Video dokumentasi praktik mengajar dihosting di Google Drive dan dibuka di tab baru.
+export const VIDEO_SOURCE_URL = "https://drive.google.com/file/d/19wlIDBFUyTzUzu5uj9wGl4HcsJ5h_cWa/view?usp=sharing";
 
 export const VIDEO_ANALYSIS_DATA: VideoAnalysisPoint[] = [
   {
